@@ -523,14 +523,14 @@ end
 
 local function bankOresAndGoBack()
     api.DoAction_Object1(0x39, 0, {67002}, 50) --goin out of cave
-    api.RandomSleep2(1000, 8000, 10000)
+    api.RandomSleep2(1000, 10000, 12000)
 
     api.DoAction_Object1(0x3f, 0, {67467}, 50) --clicked on forge to open ores interface
-    api.RandomSleep2(1000, 2000, 500)
+    api.RandomSleep2(2000, 2000, 2000)
     api.DoAction_Interface(0x24, 0xffffffff, 1, 37, 167, -1, 3808) --deposits ores
-    api.RandomSleep2(1000, 2000, 500)
+    api.RandomSleep2(2000, 2000, 2000)
     api.DoAction_Interface(0x24, 0xffffffff, 1, 37, 42, -1, 3808) --close interface
-    api.RandomSleep2(1000, 2000, 500)
+    api.RandomSleep2(2000, 2000, 2000)
 
     api.DoAction_Object1(0x39, 0, {66876}, 50) --goin into cave
     api.RandomSleep2(1000, 10000, 12000)
@@ -541,9 +541,11 @@ api.Write_LoopyLoop(true)
 
 setupGUI()
 
+local depositAttempts = 0
+
 while (api.Read_LoopyLoop()) do
-    local depositAttempts = 0
-    local maxDepositAttempts = 3 -- Change this to the number of attempts you want to allow
+
+    local maxDepositAttempts = 4 -- Change this to the number of attempts you want to allow
 
     drawGUI()
 
@@ -557,7 +559,7 @@ while (api.Read_LoopyLoop()) do
         api.RandomSleep2(500, 500, 500)
     end
 
-    if depositAttempts == 4 then
+    if depositAttempts == maxDepositAttempts then
         print("Ore box full, going to bank")
         bankOresAndGoBack()
         depositAttempts = 0
