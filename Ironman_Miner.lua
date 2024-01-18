@@ -316,6 +316,9 @@ local function getMiningLevel()
     return getLevelForXp(getMiningXP(), 120, false)
 end
 
+
+
+
 local afk = os.time()
 local startTime = os.time()
 local startXp = getMiningXP()
@@ -376,6 +379,9 @@ local function setupGUI()
 end
 --GUI END
 
+
+
+
 local function drawGUI()
     api.DrawSquareFilled(background)
     api.DrawTextAt(title_box)
@@ -390,6 +396,9 @@ local function drawGUI()
     api.DrawTextAt(etaBox)
 end
 
+
+
+
 local function round(val, decimal)
     if (val <= 0) then
         return 0
@@ -401,12 +410,16 @@ local function round(val, decimal)
     end
 end
 
+
+
 local function formatElapsedTime(time)
     local hours = math.floor(time / 3600)
     local minutes = math.floor((time % 3600) / 60)
     local seconds = math.floor(time % 60)
     return string.format("%02d:%02d:%02d", hours, minutes, seconds)
 end
+
+
 
 local function getFormattedNumber(value)
     local formattedValue = tostring(value)
@@ -422,6 +435,8 @@ local function getFormattedNumber(value)
     return formatted
 end
 
+
+
 local function updateGUI()
     local xpGained = getMiningXP() - startXp
     local elapsedTime = (os.time() - startTime)
@@ -433,15 +448,19 @@ local function updateGUI()
     xpBox.string_value = "Mining XP: " .. getFormattedNumber(xpGained) .. " (" .. getFormattedNumber(xpPerHour) .. ") "
 end
 
+
+
 local function idleCheck()
     local timeDiff = os.difftime(os.time(), afk)
     local randomTime = math.random(180, 280)
     if timeDiff > randomTime then
-        api.PIdle2()
         api.DoRandomEvents()
+        api.PIdle2()
         afk = os.time()
     end
 end
+
+
 
 local ore = {}
 local copper = {113028, 113027, 113026}
@@ -450,12 +469,13 @@ local iron = {113040, 113038, 113039}
 local coal = {113103, 113102, 113101}
 local mithril = {113050, 113051, 113052}
 local adamantite = {113055, 113053, 113054}
-local runite = {113125, 113127, 113126}
+local luminite = {113181, 113179}
+local runite = {113190, 113189}
 local player = api.GetLocalPlayerName()
 local Cselect =
     api.ScriptDialogWindow2(
     "Mining",
-    {"Copper", "Tin", "Iron", "Coal", "Mithril", "Adamantite", "Runite"},
+    {"Copper", "Tin", "Iron", "Coal", "Mithril", "Adamantite", "Luminite", "Runite"},
     "Start",
     "Close"
 ).Name
@@ -484,6 +504,10 @@ end
 if "Adamantite" == Cselect then
     ScripCuRunning1 = "Mine adamantite"
     ore = adamantite
+end
+if "Luminite" == Cselect then
+    ScripCuRunning1 = "Mine luminite"
+    ore = luminite
 end
 if "Runite" == Cselect then
     ScripCuRunning1 = "Mine runite"
@@ -517,35 +541,143 @@ local function run_to_tile(x, y, z)
     end
 end
 
+local depositAttempts = 0
+local maxDepositAttempts = 6 -- Change this to the number of attempts you want to allow
+
 local function OreBoxDeposit()
     api.DoAction_Interface(0x24, 0xaeeb, 1, 1473, 5, 0, 3808)
+    depositAttempts = depositAttempts + 1
 end
+
+local function teleBurth()
+    api.DoAction_Interface(0xffffffff,0xffffffff,1,1465,18,-1,3808) --open lodes
+    api.RandomSleep2(2000, 3000, 5000)
+    api.DoAction_Interface(0xffffffff,0xffffffff,1,1092,13,-1,3808) --tele
+    api.RandomSleep2(22000, 25000, 25000)
+end
+
+local function teleVarrock()
+    api.DoAction_Interface(0xffffffff,0xffffffff,1,1465,18,-1,3808) --open lodes
+    api.RandomSleep2(2000, 3000, 5000)
+    api.DoAction_Interface(0xffffffff,0xffffffff,1,1092,22,-1,3808) --tele
+    api.RandomSleep2(22000, 25000, 25000)
+end
+
+local function teleFally()
+    api.DoAction_Interface(0xffffffff,0xffffffff,1,1465,18,-1,3808) --open lodes
+    api.RandomSleep2(2000, 3000, 5000)
+    api.DoAction_Interface(0xffffffff,0xffffffff,1,1092,17,-1,3808) --tele
+    api.RandomSleep2(22000, 25000, 25000)
+end
+
+local function teleAnachronia()
+    api.DoAction_Interface(0xffffffff,0xffffffff,1,1465,18,-1,3808) --open lodes
+    api.RandomSleep2(2000, 3000, 5000)
+    api.DoAction_Interface(0xffffffff,0xffffffff,1,1092,25,-1,3808)
+    api.RandomSleep2(22000, 25000, 25000)
+    print("Arrived at Anachronia")
+end
+
+
+
+local Varrock = false
+local Falador = false
+local Yanille = false
+local Anachronia = true
+
+
 
 local function bankOresAndGoBack()
-    api.DoAction_Object1(0x39, 0, {67002}, 50) --goin out of cave
-    api.RandomSleep2(1000, 10000, 12000)
 
-    api.DoAction_Object1(0x3f, 0, {67467}, 50) --clicked on forge to open ores interface
-    api.RandomSleep2(2000, 2000, 2000)
-    api.DoAction_Interface(0x24, 0xffffffff, 1, 37, 167, -1, 3808) --deposits ores
-    api.RandomSleep2(2000, 2000, 2000)
-    api.DoAction_Interface(0x24, 0xffffffff, 1, 37, 42, -1, 3808) --close interface
-    api.RandomSleep2(2000, 2000, 2000)
+    if Varrock == true then
+        run_to_tile(3289, 3361, 0)
+        api.RandomSleep2(2000, 1000, 1200)
+        teleBurth()
+        api.DoAction_Object1(0x5,80,{ 25688 },50) -- open bank
+        api.RandomSleep2(6000, 6000, 7000)
+        api.DoAction_Interface(0xffffffff,0xffffffff,1,517,39,-1,3808) -- deposit
+        api.RandomSleep2(2000, 3000, 4000)
+        api.DoAction_Interface(0x24,0xffffffff,1,517,119,1,3808) -- preset 1
+        teleVarrock()
+        run_to_tile(3236, 3378, 0)
+        run_to_tile(3265, 3373, 0)
+        run_to_tile(3290, 3361, 0) -- adamant tile
+        api.RandomSleep2(2000, 2000, 500)
+        idleCheck()
+    end
 
-    api.DoAction_Object1(0x39, 0, {66876}, 50) --goin into cave
-    api.RandomSleep2(1000, 10000, 12000)
+    if Falador == true then
+        run_to_tile()
+        api.RandomSleep2(2000, 1000, 1300)
+        teleFally()
+        run_to_tile(2951,3377,0)
+        api.DoAction_Object1(0x5,80,{ ids },50) -- open bank
+        api.RandomSleep2(6000, 7000, 8000)
+        api.DoAction_Interface(0xffffffff,0xffffffff,1,517,39,-1,3808) -- deposit
+        api.RandomSleep2(2000, 3000, 4000)
+        api.DoAction_Interface(0x24,0xffffffff,1,517,119,1,3808) -- preset 1
+        api.RandomSleep2(500, 600, 700)
+        run_to_tile(2982,3378,0)
+        run_to_tile(3027,3358,0)
+        run_to_tile(3059,3372,0) -- fally mine door
+        api.DoAction_Object1(0x31,0,{ 11714 },50)
+        api.RandomSleep2(2000, 2000, 500)
+        api.DoAction_Object1(0x35,0,{ 30944 },50) -- walk down stairs
+        api.RandomSleep2(3000, 3000, 500)
+        run_to_tile(3035,9764,0) -- walk to luminite
+        api.RandomSleep2(4000, 4000, 4000)
+        api.DoAction_Object1(0x3a,0,{ 113056 },50) -- mine luminite
+        idleCheck()
+    end
+
+    if Yanille == true then
+        run_to_tile(2618, 3107, 0)
+        run_to_tile(2613, 3092, 0)
+        api.DoAction_Object1(0x5,80,{ 2213 },50) -- open bank
+        api.RandomSleep2(2000, 500, 700)
+        api.DoAction_Interface(0xffffffff,0xffffffff,1,517,39,-1,3808) -- dump stuff in bank
+        api.RandomSleep2(2000, 500, 700)
+        api.DoAction_Interface(0x24,0xffffffff,1,517,119,1,3808) -- preset 1
+        api.RandomSleep2(2000, 500, 700)
+        run_to_tile(2626, 3129, 0)
+        run_to_tile(2627, 3145, 0)
+        idleCheck()
+    end
+
+    if Anachronia == true then
+        run_to_tile(5333,2397,0)
+        api.RandomSleep2(900, 500, 700)
+        teleBurth()
+        api.DoAction_Object1(0x5,80,{ 25688 },50) -- open bank
+        api.RandomSleep2(6000, 6000, 7000)
+        api.DoAction_Interface(0xffffffff,0xffffffff,1,517,39,-1,3808) -- deposit
+        api.RandomSleep2(2000, 3000, 4000)
+        api.DoAction_Interface(0x24,0xffffffff,1,517,119,1,3808) -- preset 1
+        api.RandomSleep2(2000, 500, 700)
+        teleAnachronia()
+        ------------------------
+        run_to_tile(5394,2339,0)
+        run_to_tile(5366,2309,0)
+        run_to_tile(5333,2341,0)
+        run_to_tile(5310,2379,0) -- passed dino
+        run_to_tile(5337,2394,0) -- at mine spot
+        print("Arrived back at mine")
+    end
+
 end
+
+
+
+
+
+
 
 --main loop
 api.Write_LoopyLoop(true)
 
 setupGUI()
 
-local depositAttempts = 0
-
 while (api.Read_LoopyLoop()) do
-
-    local maxDepositAttempts = 4 -- Change this to the number of attempts you want to allow
 
     drawGUI()
 
@@ -554,13 +686,13 @@ while (api.Read_LoopyLoop()) do
     -- Inside your loop
     if api.Invfreecount_() < math.random(3, 7) then
         OreBoxDeposit()
-        depositAttempts = depositAttempts + 1
-        print("Ores deposited in ore box")
+        print("OreBox Deposit count: " .. depositAttempts)
         api.RandomSleep2(500, 500, 500)
     end
 
     if depositAttempts == maxDepositAttempts then
         print("Ore box full, going to bank")
+        --api.Write_LoopyLoop(false)
         bankOresAndGoBack()
         depositAttempts = 0
         print("Put ores in bank, walking back")
@@ -568,7 +700,7 @@ while (api.Read_LoopyLoop()) do
     end
 
     if api.Invfreecount_() > 0 then
-        print("idle check")
+        --print("idle check")
         updateGUI()
         if not api.IsPlayerAnimating_(player, 3) then
             api.RandomSleep2(1500, 6050, 2000)
@@ -582,8 +714,8 @@ while (api.Read_LoopyLoop()) do
             end
         end
 
-        print(api.LocalPlayer_HoverProgress())
-        while api.LocalPlayer_HoverProgress() <= 90 do
+        --print("Current stamina: " .. api.LocalPlayer_HoverProgress())
+        while api.LocalPlayer_HoverProgress() <= 230 do
             print("no stamina..")
             updateGUI()
             print(api.LocalPlayer_HoverProgress())
@@ -596,13 +728,14 @@ while (api.Read_LoopyLoop()) do
                 api.RandomSleep2(2500, 3050, 12000)
             else
                 -- If no sparkling rock was found, mine the first ore in the shuffled list
-                print("No Sparkle found")
+                --print("No Sparkle found")
                 updateGUI()
                 api.DoAction_Object_r(0x3a, 0, ore, 50, FFPOINT.new(0, 0, 0), 50)
                 api.RandomSleep2(2500, 3050, 12000)
             end
         end
     end
+    api.PIdle2()
     updateGUI()
     api.RandomSleep2(500, 3050, 12000)
 end
