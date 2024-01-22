@@ -316,9 +316,6 @@ local function getMiningLevel()
     return getLevelForXp(getMiningXP(), 120, false)
 end
 
-
-
-
 local afk = os.time()
 local startTime = os.time()
 local startXp = getMiningXP()
@@ -379,9 +376,6 @@ local function setupGUI()
 end
 --GUI END
 
-
-
-
 local function drawGUI()
     api.DrawSquareFilled(background)
     api.DrawTextAt(title_box)
@@ -396,9 +390,6 @@ local function drawGUI()
     api.DrawTextAt(etaBox)
 end
 
-
-
-
 local function round(val, decimal)
     if (val <= 0) then
         return 0
@@ -410,16 +401,12 @@ local function round(val, decimal)
     end
 end
 
-
-
 local function formatElapsedTime(time)
     local hours = math.floor(time / 3600)
     local minutes = math.floor((time % 3600) / 60)
     local seconds = math.floor(time % 60)
     return string.format("%02d:%02d:%02d", hours, minutes, seconds)
 end
-
-
 
 local function getFormattedNumber(value)
     local formattedValue = tostring(value)
@@ -435,8 +422,6 @@ local function getFormattedNumber(value)
     return formatted
 end
 
-
-
 local function updateGUI()
     local xpGained = getMiningXP() - startXp
     local elapsedTime = (os.time() - startTime)
@@ -448,8 +433,6 @@ local function updateGUI()
     xpBox.string_value = "Mining XP: " .. getFormattedNumber(xpGained) .. " (" .. getFormattedNumber(xpPerHour) .. ") "
 end
 
-
-
 local function idleCheck()
     local timeDiff = os.difftime(os.time(), afk)
     local randomTime = math.random(180, 280)
@@ -460,8 +443,6 @@ local function idleCheck()
     end
 end
 
-
-
 local ore = {}
 local copper = {113028, 113027, 113026}
 local tin = {113031, 113030}
@@ -471,11 +452,13 @@ local mithril = {113050, 113051, 113052}
 local adamantite = {113055, 113053, 113054}
 local luminite = {113181, 113179}
 local runite = {113190, 113189}
+local phasmatite = {113137, 113138, 113139}
+local necrite = {113206, 113207, 113208}
 local player = api.GetLocalPlayerName()
 local Cselect =
     api.ScriptDialogWindow2(
     "Mining",
-    {"Copper", "Tin", "Iron", "Coal", "Mithril", "Adamantite", "Luminite", "Runite"},
+    {"Copper", "Tin", "Iron", "Coal", "Mithril", "Adamantite", "Luminite", "Runite", "Phasmatite", "Necrite"},
     "Start",
     "Close"
 ).Name
@@ -513,6 +496,14 @@ if "Runite" == Cselect then
     ScripCuRunning1 = "Mine runite"
     ore = runite
 end
+if "Phasmatite" == Cselect then
+    ScripCuRunning1 = "Mine phasmatite"
+    ore = phasmatite
+end
+if "Necrite" == Cselect then
+    ScripCuRunning1 = "Mine necrite"
+    ore = necrite
+end
 
 print("STARTING TO MINE: |", ScripCuRunning1, "|")
 
@@ -545,59 +536,86 @@ local depositAttempts = 0
 local maxDepositAttempts = 6 -- Change this to the number of attempts you want to allow
 
 local function OreBoxDeposit()
-    api.DoAction_Interface(0x24, 0xaeeb, 1, 1473, 5, 0, 3808)
+    api.DoAction_Interface(0x24, 0xaeeb, 1, 1473, 5, 0, api.OFF_ACT_GeneralInterface_route)
     depositAttempts = depositAttempts + 1
 end
 
 local function teleBurth()
-    api.DoAction_Interface(0xffffffff,0xffffffff,1,1465,18,-1,3808) --open lodes
+    api.DoAction_Interface(0xffffffff, 0xffffffff, 1, 1465, 18, -1, api.OFF_ACT_GeneralInterface_route) --open lodes
     api.RandomSleep2(2000, 3000, 5000)
-    api.DoAction_Interface(0xffffffff,0xffffffff,1,1092,13,-1,3808) --tele
+    api.DoAction_Interface(0xffffffff, 0xffffffff, 1, 1092, 13, -1, api.OFF_ACT_GeneralInterface_route) --tele
     api.RandomSleep2(22000, 25000, 25000)
 end
 
 local function teleVarrock()
-    api.DoAction_Interface(0xffffffff,0xffffffff,1,1465,18,-1,3808) --open lodes
+    api.DoAction_Interface(0xffffffff, 0xffffffff, 1, 1465, 18, -1, api.OFF_ACT_GeneralInterface_route) --open lodes
     api.RandomSleep2(2000, 3000, 5000)
-    api.DoAction_Interface(0xffffffff,0xffffffff,1,1092,22,-1,3808) --tele
+    api.DoAction_Interface(0xffffffff, 0xffffffff, 1, 1092, 22, -1, api.OFF_ACT_GeneralInterface_route) --tele
     api.RandomSleep2(22000, 25000, 25000)
 end
 
 local function teleFally()
-    api.DoAction_Interface(0xffffffff,0xffffffff,1,1465,18,-1,3808) --open lodes
+    api.DoAction_Interface(0xffffffff, 0xffffffff, 1, 1465, 18, -1, api.OFF_ACT_GeneralInterface_route) --open lodes
     api.RandomSleep2(2000, 3000, 5000)
-    api.DoAction_Interface(0xffffffff,0xffffffff,1,1092,17,-1,3808) --tele
+    api.DoAction_Interface(0xffffffff, 0xffffffff, 1, 1092, 17, -1, api.OFF_ACT_GeneralInterface_route) --tele
     api.RandomSleep2(22000, 25000, 25000)
 end
 
 local function teleAnachronia()
-    api.DoAction_Interface(0xffffffff,0xffffffff,1,1465,18,-1,3808) --open lodes
+    api.DoAction_Interface(0xffffffff, 0xffffffff, 1, 1465, 18, -1, api.OFF_ACT_GeneralInterface_route) --open lodes
     api.RandomSleep2(2000, 3000, 5000)
-    api.DoAction_Interface(0xffffffff,0xffffffff,1,1092,25,-1,3808)
+    api.DoAction_Interface(0xffffffff, 0xffffffff, 1, 1092, 25, -1, api.OFF_ACT_GeneralInterface_route)
     api.RandomSleep2(22000, 25000, 25000)
     print("Arrived at Anachronia")
 end
 
+local function teleAlKharid()
+    api.DoAction_Interface(0xffffffff, 0xffffffff, 1, 1465, 18, -1, api.OFF_ACT_GeneralInterface_route) --open lodes
+    api.RandomSleep2(2000, 3000, 5000)
+    api.DoAction_Interface(0xffffffff, 0xffffffff, 1, 1092, 11, -1, api.OFF_ACT_GeneralInterface_route)
+    api.RandomSleep2(20000, 25000, 25000)
+end
 
+local function teleCanifis()
+    api.DoAction_Interface(0xffffffff, 0xffffffff, 1, 1465, 18, -1, api.OFF_ACT_GeneralInterface_route) --open lodes
+    api.RandomSleep2(2000, 3000, 5000)
+    api.DoAction_Interface(0xffffffff, 0xffffffff, 1, 1092, 27, -1, api.OFF_ACT_GeneralInterface_route)
+    api.RandomSleep2(20000, 25000, 25000)
+end
+
+local function teleWildy()
+    api.DoAction_Interface(0xffffffff, 0xffffffff, 1, 1465, 18, -1, api.OFF_ACT_GeneralInterface_route) --open lodes
+    api.RandomSleep2(2000, 3000, 5000)
+    api.DoAction_Interface(0xffffffff, 0xffffffff, 1, 1092, 33, -1, api.OFF_ACT_GeneralInterface_route)
+    api.RandomSleep2(20000, 500, 2000)
+end
+
+local function RunToTwentyWildy()
+    run_to_tile(3064, 3796, 0)
+    run_to_tile(3087, 3786, 0)
+    run_to_tile(3087, 3755, 0)
+    run_to_tile(3074, 3700, 0)
+    run_to_tile(3084, 3653, 0)
+end
 
 local Varrock = false
 local Falador = false
 local Yanille = false
-local Anachronia = true
-
-
+local Anachronia = false
+local AlKharid = false
+local Canifis = false
+local Wildy = true
 
 local function bankOresAndGoBack()
-
     if Varrock == true then
         run_to_tile(3289, 3361, 0)
         api.RandomSleep2(2000, 1000, 1200)
         teleBurth()
-        api.DoAction_Object1(0x5,80,{ 25688 },50) -- open bank
+        api.DoAction_Object1(0x5, 80, {25688}, 50) -- open bank
         api.RandomSleep2(6000, 6000, 7000)
-        api.DoAction_Interface(0xffffffff,0xffffffff,1,517,39,-1,3808) -- deposit
+        api.DoAction_Interface(0xffffffff, 0xffffffff, 1, 517, 39, -1, api.OFF_ACT_GeneralInterface_route) -- deposit
         api.RandomSleep2(2000, 3000, 4000)
-        api.DoAction_Interface(0x24,0xffffffff,1,517,119,1,3808) -- preset 1
+        api.DoAction_Interface(0x24, 0xffffffff, 1, 517, 119, 1, api.OFF_ACT_GeneralInterface_route) -- preset 1
         teleVarrock()
         run_to_tile(3236, 3378, 0)
         run_to_tile(3265, 3373, 0)
@@ -610,34 +628,34 @@ local function bankOresAndGoBack()
         run_to_tile()
         api.RandomSleep2(2000, 1000, 1300)
         teleFally()
-        run_to_tile(2951,3377,0)
-        api.DoAction_Object1(0x5,80,{ ids },50) -- open bank
+        run_to_tile(2951, 3377, 0)
+        api.DoAction_Object1(0x5, 80, {ids}, 50) -- open bank
         api.RandomSleep2(6000, 7000, 8000)
-        api.DoAction_Interface(0xffffffff,0xffffffff,1,517,39,-1,3808) -- deposit
+        api.DoAction_Interface(0xffffffff, 0xffffffff, 1, 517, 39, -1, api.OFF_ACT_GeneralInterface_route) -- deposit
         api.RandomSleep2(2000, 3000, 4000)
-        api.DoAction_Interface(0x24,0xffffffff,1,517,119,1,3808) -- preset 1
+        api.DoAction_Interface(0x24, 0xffffffff, 1, 517, 119, 1, api.OFF_ACT_GeneralInterface_route) -- preset 1
         api.RandomSleep2(500, 600, 700)
-        run_to_tile(2982,3378,0)
-        run_to_tile(3027,3358,0)
-        run_to_tile(3059,3372,0) -- fally mine door
-        api.DoAction_Object1(0x31,0,{ 11714 },50)
+        run_to_tile(2982, 3378, 0)
+        run_to_tile(3027, 3358, 0)
+        run_to_tile(3059, 3372, 0) -- fally mine door
+        api.DoAction_Object1(0x31, 0, {11714}, 50)
         api.RandomSleep2(2000, 2000, 500)
-        api.DoAction_Object1(0x35,0,{ 30944 },50) -- walk down stairs
+        api.DoAction_Object1(0x35, 0, {30944}, 50) -- walk down stairs
         api.RandomSleep2(3000, 3000, 500)
-        run_to_tile(3035,9764,0) -- walk to luminite
+        run_to_tile(3035, 9764, 0) -- walk to luminite
         api.RandomSleep2(4000, 4000, 4000)
-        api.DoAction_Object1(0x3a,0,{ 113056 },50) -- mine luminite
+        api.DoAction_Object1(0x3a, 0, {113056}, 50) -- mine luminite
         idleCheck()
     end
 
     if Yanille == true then
         run_to_tile(2618, 3107, 0)
         run_to_tile(2613, 3092, 0)
-        api.DoAction_Object1(0x5,80,{ 2213 },50) -- open bank
+        api.DoAction_Object1(0x5, 80, {2213}, 50) -- open bank
         api.RandomSleep2(2000, 500, 700)
-        api.DoAction_Interface(0xffffffff,0xffffffff,1,517,39,-1,3808) -- dump stuff in bank
+        api.DoAction_Interface(0xffffffff, 0xffffffff, 1, 517, 39, -1, api.OFF_ACT_GeneralInterface_route) -- dump stuff in bank
         api.RandomSleep2(2000, 500, 700)
-        api.DoAction_Interface(0x24,0xffffffff,1,517,119,1,3808) -- preset 1
+        api.DoAction_Interface(0x24, 0xffffffff, 1, 517, 119, 1, api.OFF_ACT_GeneralInterface_route) -- preset 1
         api.RandomSleep2(2000, 500, 700)
         run_to_tile(2626, 3129, 0)
         run_to_tile(2627, 3145, 0)
@@ -645,32 +663,131 @@ local function bankOresAndGoBack()
     end
 
     if Anachronia == true then
-        run_to_tile(5333,2397,0)
+        run_to_tile(5333, 2397, 0)
         api.RandomSleep2(900, 500, 700)
         teleBurth()
-        api.DoAction_Object1(0x5,80,{ 25688 },50) -- open bank
+        api.DoAction_Object1(0x5, 80, {25688}, 50) -- open bank
         api.RandomSleep2(6000, 6000, 7000)
-        api.DoAction_Interface(0xffffffff,0xffffffff,1,517,39,-1,3808) -- deposit
+        api.DoAction_Interface(0xffffffff, 0xffffffff, 1, 517, 39, -1, api.OFF_ACT_GeneralInterface_route) -- deposit
         api.RandomSleep2(2000, 3000, 4000)
-        api.DoAction_Interface(0x24,0xffffffff,1,517,119,1,3808) -- preset 1
+        api.DoAction_Interface(0x24, 0xffffffff, 1, 517, 119, 1, api.OFF_ACT_GeneralInterface_route) -- preset 1
         api.RandomSleep2(2000, 500, 700)
         teleAnachronia()
         ------------------------
-        run_to_tile(5394,2339,0)
-        run_to_tile(5366,2309,0)
-        run_to_tile(5333,2341,0)
-        run_to_tile(5310,2379,0) -- passed dino
-        run_to_tile(5337,2394,0) -- at mine spot
+        run_to_tile(5394, 2339, 0)
+        run_to_tile(5366, 2309, 0)
+        run_to_tile(5333, 2341, 0)
+        run_to_tile(5310, 2379, 0) -- passed dino
+        run_to_tile(5337, 2394, 0) -- at mine spot
         print("Arrived back at mine")
     end
 
+    --if AlKharid == true then
+    --   run_to_tile()
+    --    teleAlKharid()
+    --    run_to_tile(3307,3223,0)
+    --    run_to_tile(3308,3258,0)
+    --    run_to_tile(3300,3305,0)
+    --end
+
+    if Canifis == true then
+        run_to_tile(3691, 3398, 0)
+        api.RandomSleep2(900, 500, 700)
+        teleBurth()
+        api.DoAction_Object1(0x5, 80, {25688}, 50) -- open bank
+        api.RandomSleep2(6000, 6000, 7000)
+        api.DoAction_Interface(0xffffffff, 0xffffffff, 1, 517, 39, -1, api.OFF_ACT_GeneralInterface_route) -- deposit
+        api.RandomSleep2(2000, 3000, 4000)
+        api.DoAction_Interface(0x24, 0xffffffff, 1, 517, 119, 1, api.OFF_ACT_GeneralInterface_route) -- preset 1
+        api.RandomSleep2(2000, 500, 700)
+        ------------------------
+        teleCanifis()
+        run_to_tile(3565, 3484, 0)
+        run_to_tile(3597, 3448, 0)
+        run_to_tile(3637, 3428, 0)
+        run_to_tile(3685, 3420, 0)
+        run_to_tile(3691, 3401, 0)
+    end
+
+    if Wildy == true then
+        run_to_tile(3030, 3806, 0)
+        RunToTwentyWildy()
+        api.RandomSleep2(600, 600, 800)
+        teleBurth()
+        api.DoAction_Object1(0x5, 80, {25688}, 50) -- open bank
+        api.RandomSleep2(6000, 6000, 7000)
+        api.DoAction_Interface(0xffffffff, 0xffffffff, 1, 517, 39, -1, api.OFF_ACT_GeneralInterface_route) -- deposit
+        api.RandomSleep2(2000, 3000, 4000)
+        api.DoAction_Interface(0x24, 0xffffffff, 1, 517, 119, 1, api.OFF_ACT_GeneralInterface_route) -- preset 1
+        api.RandomSleep2(2000, 500, 700)
+        -----------------------
+        teleWildy()
+        run_to_tile(3093, 3657, 0)
+        run_to_tile(3071, 3690, 0)
+        run_to_tile(3075, 3739, 0)
+        run_to_tile(3084, 3769, 0)
+        run_to_tile(3076, 3798, 0)
+        run_to_tile(3031, 3804, 0)
+    end
+end
+
+local NPC = {
+    DEATH = { 27299 }
+}
+
+local AREAS = {
+    NECRITE_MINE = { x = 3031, y = 3804, z = 0 }
+}
+
+local function findNpc(npcID, distance)
+    distance = distance or 15
+    local allNpc = api.GetAllObjArrayInteract(npcID, distance, 1)
+    return allNpc[1] or false
 end
 
 
+local function inDeathsOffice()
+    local spot = findNpc(NPC.DEATH, 15)
+    if spot then
+        print("Death there")
+        return true
+    else
+        print("Death not there")
+        return false
+    end
+end
 
+local function inMineArea()
+    local isInMine = api.PInArea(AREAS.NECRITE_MINE.x, 6, AREAS.NECRITE_MINE.y, 6, 0)
+    if isInMine then 
+        return true
+    end
+end
 
-
-
+local function bankOresAndGoBackV2()
+    api.RandomSleep2(3000, 500, 900)
+    api.DoAction_NPC(0x29, api.OFF_ACT_InteractNPC_route3, {27299}, 50) --reclaim death
+    api.RandomSleep2(600, 600, 800)
+    api.DoAction_Interface(0xffffffff, 0xffffffff, 1, 1626, 47, -1, api.OFF_ACT_GeneralInterface_route) --select reclaim all
+    api.RandomSleep2(600, 600, 800)
+    api.DoAction_Interface(0xffffffff, 0xffffffff, 0, 1626, 72, -1, api.OFF_ACT_GeneralInterface_Choose_option) --confirm claim
+    api.RandomSleep2(600, 600, 800)
+    teleBurth()
+    api.DoAction_Object1(0x5, 80, {25688}, 50) -- open bank
+    api.RandomSleep2(6000, 6000, 7000)
+    api.DoAction_Interface(0xffffffff, 0xffffffff, 1, 517, 39, -1, api.OFF_ACT_GeneralInterface_route) -- deposit
+    api.RandomSleep2(2000, 3000, 4000)
+    api.DoAction_Interface(0x24, 0xffffffff, 1, 517, 119, 1, api.OFF_ACT_GeneralInterface_route) -- preset 1
+    api.RandomSleep2(2000, 500, 700)
+    -----------------------
+    teleWildy()
+    run_to_tile(3093, 3657, 0)
+    run_to_tile(3071, 3690, 0)
+    run_to_tile(3075, 3739, 0)
+    run_to_tile(3084, 3769, 0)
+    run_to_tile(3076, 3798, 0)
+    run_to_tile(3031, 3804, 0)
+end
 
 --main loop
 api.Write_LoopyLoop(true)
@@ -683,59 +800,129 @@ while (api.Read_LoopyLoop()) do
 
     updateGUI()
 
+    print("Right before first death check 774")
+
+    if inDeathsOffice() then
+        print("First death check line 775")
+        bankOresAndGoBackV2()
+    end
+
     -- Inside your loop
     if api.Invfreecount_() < math.random(3, 7) then
+
         OreBoxDeposit()
+
         print("OreBox Deposit count: " .. depositAttempts)
+
         api.RandomSleep2(500, 500, 500)
+
     end
 
     if depositAttempts == maxDepositAttempts then
+
         print("Ore box full, going to bank")
-        --api.Write_LoopyLoop(false)
+
         bankOresAndGoBack()
+
         depositAttempts = 0
+
         print("Put ores in bank, walking back")
+
         api.RandomSleep2(500, 500, 500)
+
     end
 
     if api.Invfreecount_() > 0 then
-        --print("idle check")
+
+        print("Checking inv count line 805")
+
         updateGUI()
+
         if not api.IsPlayerAnimating_(player, 3) then
+
             api.RandomSleep2(1500, 6050, 2000)
+
             if not api.IsPlayerAnimating_(player, 2) then
+
                 print("idle so start mining...")
+
                 updateGUI()
+
                 -- Shuffle the ore IDs
+
                 ore = shuffle(ore)
+
                 -- Mine the first ore in the shuffled list
+
                 api.DoAction_Object_r(0x3a, 0, {ore[1]}, 50, FFPOINT.new(0, 0, 0), 50)
+
             end
+
         end
 
-        --print("Current stamina: " .. api.LocalPlayer_HoverProgress())
+        if inDeathsOffice() then
+            print("Handling death line 832")
+            bankOresAndGoBackV2()
+        end
+
         while api.LocalPlayer_HoverProgress() <= 230 do
+
             print("no stamina..")
+
+            if inDeathsOffice() then
+                print("Handling death line 834")
+                bankOresAndGoBackV2()
+            end
+
+            print("Skipped death handle line 838")
+
             updateGUI()
+
             print(api.LocalPlayer_HoverProgress())
+
             -- Try to find and mine a sparkling rock
             local foundSparkling = api.FindHl(0x3a, 0, ore, 50, {7165, 7164})
+
             if foundSparkling then
+
                 print("Sparkle found")
+
                 updateGUI()
+
                 api.FindHl(0x3a, 0, ore, 50, {7165, 7164})
+
                 api.RandomSleep2(2500, 3050, 12000)
+
             else
                 -- If no sparkling rock was found, mine the first ore in the shuffled list
                 --print("No Sparkle found")
                 updateGUI()
+
+                print("Arrived at line 862")
+
                 api.DoAction_Object_r(0x3a, 0, ore, 50, FFPOINT.new(0, 0, 0), 50)
+
                 api.RandomSleep2(2500, 3050, 12000)
+
             end
+
         end
+
     end
+
+    print("Reached end line 874")
+
     api.PIdle2()
+
+    --handles necrite spot due to wildy creatures
+    if not inMineArea() then
+        run_to_tile(3031, 3804, 0)
+        api.RandomSleep2(900, 600, 700)
+    end
+    --
+
     updateGUI()
-    api.RandomSleep2(500, 3050, 12000)
+
+    api.RandomSleep2(1000, 500, 700)
+
 end
