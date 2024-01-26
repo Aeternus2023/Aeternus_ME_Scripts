@@ -454,11 +454,12 @@ local luminite = {113181, 113179}
 local runite = {113190, 113189}
 local phasmatite = {113137, 113138, 113139}
 local necrite = {113206, 113207, 113208}
+local banite = {113203, 113204}
 local player = api.GetLocalPlayerName()
 local Cselect =
     api.ScriptDialogWindow2(
     "Mining",
-    {"Copper", "Tin", "Iron", "Coal", "Mithril", "Adamantite", "Luminite", "Runite", "Phasmatite", "Necrite"},
+    {"Copper", "Tin", "Iron", "Coal", "Mithril", "Adamantite", "Luminite", "Runite", "Phasmatite", "Necrite", "Banite"},
     "Start",
     "Close"
 ).Name
@@ -503,6 +504,10 @@ end
 if "Necrite" == Cselect then
     ScripCuRunning1 = "Mine necrite"
     ore = necrite
+end
+if "Banite" == Cselect then
+    ScripCuRunning1 = "Mine banite"
+    ore = banite
 end
 
 print("STARTING TO MINE: |", ScripCuRunning1, "|")
@@ -590,6 +595,13 @@ local function teleWildy()
     api.RandomSleep2(20000, 500, 2000)
 end
 
+local function teleRelleka()
+    api.DoAction_Interface(0xffffffff, 0xffffffff, 1, 1465, 18, -1, api.OFF_ACT_GeneralInterface_route) --open lodes
+    api.RandomSleep2(2000, 3000, 5000)
+    api.DoAction_Interface(0xffffffff, 0xffffffff, 1, 1092, 29, -1, api.OFF_ACT_GeneralInterface_route)
+    api.RandomSleep2(20000, 500, 2000)
+end
+
 local function RunToTwentyWildy()
     run_to_tile(3064, 3796, 0)
     run_to_tile(3087, 3786, 0)
@@ -604,7 +616,8 @@ local Yanille = false
 local Anachronia = false
 local AlKharid = false
 local Canifis = false
-local Wildy = true
+local Wildy = false
+local Relleka = true
 
 local function bankOresAndGoBack()
     if Varrock == true then
@@ -729,6 +742,29 @@ local function bankOresAndGoBack()
         run_to_tile(3076, 3798, 0)
         run_to_tile(3031, 3804, 0)
     end
+
+    if Relleka == true then
+        run_to_tile(2716,3874,0)
+        api.RandomSleep2(600, 600, 800)
+        teleBurth()
+        api.DoAction_Object1(0x5, 80, {25688}, 50) -- open bank
+        api.RandomSleep2(6000, 6000, 7000)
+        api.DoAction_Interface(0xffffffff, 0xffffffff, 1, 517, 39, -1, api.OFF_ACT_GeneralInterface_route) -- deposit
+        api.RandomSleep2(2000, 3000, 4000)
+        api.DoAction_Interface(0x24, 0xffffffff, 1, 517, 119, 1, api.OFF_ACT_GeneralInterface_route) -- preset 1
+        api.RandomSleep2(2000, 500, 700)
+        -----------------------
+        teleRelleka()
+        run_to_tile(2722,3727,0)
+        run_to_tile(2732,3778,0)
+        api.DoAction_Object1(0x29,0,{ 19690 },50)
+        api.RandomSleep2(10000, 3000, 4000)
+        run_to_tile(2740,3837,0)
+        api.DoAction_Object1(0x34,0,{ 91222 },50)
+        api.RandomSleep2(10000, 3000, 4000)
+        run_to_tile(2723,3874,0)
+    end
+
 end
 
 local NPC = {
@@ -800,12 +836,12 @@ while (api.Read_LoopyLoop()) do
 
     updateGUI()
 
-    print("Right before first death check 774")
+    --print("Right before first death check 774")
 
-    if inDeathsOffice() then
-        print("First death check line 775")
-        bankOresAndGoBackV2()
-    end
+   -- if inDeathsOffice() then
+   --     print("First death check line 775")
+   --     bankOresAndGoBackV2()
+   -- end
 
     -- Inside your loop
     if api.Invfreecount_() < math.random(3, 7) then
@@ -834,7 +870,7 @@ while (api.Read_LoopyLoop()) do
 
     if api.Invfreecount_() > 0 then
 
-        print("Checking inv count line 805")
+       -- print("Checking inv count line 805")
 
         updateGUI()
 
@@ -860,21 +896,21 @@ while (api.Read_LoopyLoop()) do
 
         end
 
-        if inDeathsOffice() then
-            print("Handling death line 832")
-            bankOresAndGoBackV2()
-        end
+        --if inDeathsOffice() then
+        --    print("Handling death line 832")
+         --   bankOresAndGoBackV2()
+        --end
 
         while api.LocalPlayer_HoverProgress() <= 230 do
 
             print("no stamina..")
 
-            if inDeathsOffice() then
-                print("Handling death line 834")
-                bankOresAndGoBackV2()
-            end
+            --if inDeathsOffice() then
+             --   print("Handling death line 834")
+              --  bankOresAndGoBackV2()
+            --end
 
-            print("Skipped death handle line 838")
+            --print("Skipped death handle line 838")
 
             updateGUI()
 
@@ -898,7 +934,7 @@ while (api.Read_LoopyLoop()) do
                 --print("No Sparkle found")
                 updateGUI()
 
-                print("Arrived at line 862")
+               -- print("Arrived at line 862")
 
                 api.DoAction_Object_r(0x3a, 0, ore, 50, FFPOINT.new(0, 0, 0), 50)
 
@@ -910,15 +946,15 @@ while (api.Read_LoopyLoop()) do
 
     end
 
-    print("Reached end line 874")
+   -- print("Reached end line 874")
 
     api.PIdle2()
 
     --handles necrite spot due to wildy creatures
-    if not inMineArea() then
-        run_to_tile(3031, 3804, 0)
-        api.RandomSleep2(900, 600, 700)
-    end
+    --if not inMineArea() then
+        --run_to_tile(3031, 3804, 0)
+        --api.RandomSleep2(900, 600, 700)
+    --end
     --
 
     updateGUI()
