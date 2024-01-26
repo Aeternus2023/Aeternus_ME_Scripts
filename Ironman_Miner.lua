@@ -545,28 +545,28 @@ local function OreBoxDeposit()
     depositAttempts = depositAttempts + 1
 end
 
-local function teleBurth()
+local function teleBurth() --copper/tin/iron or go back to bank
     api.DoAction_Interface(0xffffffff, 0xffffffff, 1, 1465, 18, -1, api.OFF_ACT_GeneralInterface_route) --open lodes
     api.RandomSleep2(2000, 3000, 5000)
     api.DoAction_Interface(0xffffffff, 0xffffffff, 1, 1092, 13, -1, api.OFF_ACT_GeneralInterface_route) --tele
     api.RandomSleep2(22000, 25000, 25000)
 end
 
-local function teleVarrock()
+local function teleVarrock() -- adamant/mithril
     api.DoAction_Interface(0xffffffff, 0xffffffff, 1, 1465, 18, -1, api.OFF_ACT_GeneralInterface_route) --open lodes
     api.RandomSleep2(2000, 3000, 5000)
     api.DoAction_Interface(0xffffffff, 0xffffffff, 1, 1092, 22, -1, api.OFF_ACT_GeneralInterface_route) --tele
     api.RandomSleep2(22000, 25000, 25000)
 end
 
-local function teleFally()
+local function teleFally() --fally dungeon mine
     api.DoAction_Interface(0xffffffff, 0xffffffff, 1, 1465, 18, -1, api.OFF_ACT_GeneralInterface_route) --open lodes
     api.RandomSleep2(2000, 3000, 5000)
     api.DoAction_Interface(0xffffffff, 0xffffffff, 1, 1092, 17, -1, api.OFF_ACT_GeneralInterface_route) --tele
     api.RandomSleep2(22000, 25000, 25000)
 end
 
-local function teleAnachronia()
+local function teleAnachronia() --adamantite/luminite without scorpions in falador dungeon
     api.DoAction_Interface(0xffffffff, 0xffffffff, 1, 1465, 18, -1, api.OFF_ACT_GeneralInterface_route) --open lodes
     api.RandomSleep2(2000, 3000, 5000)
     api.DoAction_Interface(0xffffffff, 0xffffffff, 1, 1092, 25, -1, api.OFF_ACT_GeneralInterface_route)
@@ -574,35 +574,35 @@ local function teleAnachronia()
     print("Arrived at Anachronia")
 end
 
-local function teleAlKharid()
+local function teleAlKharid() --unused to do lack of reqs for dungeon to mine
     api.DoAction_Interface(0xffffffff, 0xffffffff, 1, 1465, 18, -1, api.OFF_ACT_GeneralInterface_route) --open lodes
     api.RandomSleep2(2000, 3000, 5000)
     api.DoAction_Interface(0xffffffff, 0xffffffff, 1, 1092, 11, -1, api.OFF_ACT_GeneralInterface_route)
     api.RandomSleep2(20000, 25000, 25000)
 end
 
-local function teleCanifis()
+local function teleCanifis() --phasmatite
     api.DoAction_Interface(0xffffffff, 0xffffffff, 1, 1465, 18, -1, api.OFF_ACT_GeneralInterface_route) --open lodes
     api.RandomSleep2(2000, 3000, 5000)
     api.DoAction_Interface(0xffffffff, 0xffffffff, 1, 1092, 27, -1, api.OFF_ACT_GeneralInterface_route)
     api.RandomSleep2(20000, 25000, 25000)
 end
 
-local function teleWildy()
+local function teleWildy() --necrite
     api.DoAction_Interface(0xffffffff, 0xffffffff, 1, 1465, 18, -1, api.OFF_ACT_GeneralInterface_route) --open lodes
     api.RandomSleep2(2000, 3000, 5000)
     api.DoAction_Interface(0xffffffff, 0xffffffff, 1, 1092, 33, -1, api.OFF_ACT_GeneralInterface_route)
     api.RandomSleep2(20000, 500, 2000)
 end
 
-local function teleRelleka()
+local function teleRelleka() --banite
     api.DoAction_Interface(0xffffffff, 0xffffffff, 1, 1465, 18, -1, api.OFF_ACT_GeneralInterface_route) --open lodes
     api.RandomSleep2(2000, 3000, 5000)
     api.DoAction_Interface(0xffffffff, 0xffffffff, 1, 1092, 29, -1, api.OFF_ACT_GeneralInterface_route)
     api.RandomSleep2(20000, 500, 2000)
 end
 
-local function RunToTwentyWildy()
+local function RunToTwentyWildy() --safe wildy spot to go back to burthorpe
     run_to_tile(3064, 3796, 0)
     run_to_tile(3087, 3786, 0)
     run_to_tile(3087, 3755, 0)
@@ -610,6 +610,7 @@ local function RunToTwentyWildy()
     run_to_tile(3084, 3653, 0)
 end
 
+--set to true if you wanna tele there based on ore you wanna mine
 local Varrock = false
 local Falador = false
 local Yanille = false
@@ -620,6 +621,7 @@ local Wildy = false
 local Relleka = true
 
 local function bankOresAndGoBack()
+
     if Varrock == true then
         run_to_tile(3289, 3361, 0)
         api.RandomSleep2(2000, 1000, 1200)
@@ -766,7 +768,7 @@ local function bankOresAndGoBack()
     end
 
 end
-
+--extra stuff for death check in wildy, but now it runs to a safe spot when wanders too far so not needed
 local NPC = {
     DEATH = { 27299 }
 }
@@ -775,6 +777,7 @@ local AREAS = {
     NECRITE_MINE = { x = 3031, y = 3804, z = 0 }
 }
 
+--unused
 local function findNpc(npcID, distance)
     distance = distance or 15
     local allNpc = api.GetAllObjArrayInteract(npcID, distance, 1)
@@ -793,6 +796,7 @@ local function inDeathsOffice()
     end
 end
 
+--safe spot from dark beasts in wildy mining spot
 local function inMineArea()
     local isInMine = api.PInArea(AREAS.NECRITE_MINE.x, 6, AREAS.NECRITE_MINE.y, 6, 0)
     if isInMine then 
@@ -800,6 +804,7 @@ local function inMineArea()
     end
 end
 
+--2nd version of banking if you were sent to death, will reclaim items and go to burth to begin again and go back to ONLY wildy
 local function bankOresAndGoBackV2()
     api.RandomSleep2(3000, 500, 900)
     api.DoAction_NPC(0x29, api.OFF_ACT_InteractNPC_route3, {27299}, 50) --reclaim death
@@ -824,6 +829,10 @@ local function bankOresAndGoBackV2()
     run_to_tile(3076, 3798, 0)
     run_to_tile(3031, 3804, 0)
 end
+
+
+
+
 
 --main loop
 api.Write_LoopyLoop(true)
