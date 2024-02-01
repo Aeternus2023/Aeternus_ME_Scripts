@@ -3,6 +3,7 @@ local UTILS = require("utils")
 local startTime = os.time()
 local startXp = API.GetSkillXP("RUNECRAFTING")
 local runes = 0
+local player = API.GetLocalPlayerName()
 
 -- 8939 Teleporting from location
 -- 8941 Arriving from Teleport
@@ -123,7 +124,7 @@ local function doBank()
     print("Banking")
     API.DoAction_Object1(0x2e, API.OFF_ACT_GeneralObject_route1, {ID.BANK_CHEST}, 50)
     API.WaitUntilMovingEnds()
-    if API.BankOpen2() and not API.IsPlayerMoving_ then
+    if API.BankOpen2() and not API.IsPlayerMoving_(player) then
         API.KeyboardPress(0x31, 50, 100) -- loads preset 1 by using keycode for 1
         print("Preset 1 loaded")
         API.RandomSleep2(900, 200, 300)
