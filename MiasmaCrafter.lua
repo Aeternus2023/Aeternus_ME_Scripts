@@ -117,6 +117,16 @@ end
 
 ------END OF GUI-------
 
+local function idleCheck()
+    local timeDiff = os.difftime(os.time(), afk)
+    local randomTime = math.random(180, 280)
+    if timeDiff > randomTime then
+        API.DoRandomEvents()
+        API.PIdle2()
+        afk = os.time()
+    end
+end
+
 local function doBank()
     print("Going to smithy")
     API.KeyboardPress(0x31, 50, 100) -- number 1 key for tome teleport to Um smithy
@@ -175,5 +185,6 @@ while (API.Read_LoopyLoop()) do
     print("Runes made, repeating...")
 
     printProgressReport()
+    idleCheck()
     API.RandomSleep2(1000, 2000, 2000)
 end
